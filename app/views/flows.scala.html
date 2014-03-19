@@ -1,0 +1,47 @@
+@(message: String, flows: List[Flow])
+
+@import helper.twitterBootstrap._
+@import helper._
+
+<html>
+    <head>
+
+        <title>@message</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-theme.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="thumbsup" type="image/png" href="@routes.Assets.at("images/like_thumbs_up.png")">
+
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/d3.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/eviz.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@controllers.routes.Application.javascriptRoutes" type="text/javascript"></script>
+    </head>
+
+    <body>
+    	<div class="sc-docs-header" id="content">
+	    	<div class="container">
+	      		<h1>Eviz</h1>
+	    	</div>
+  		</div>
+    	<div id="listaeventi">
+    		<p>
+    			Eviz è uno strumento di visualizzazione eventi. Trova quelli più interessanti, esprimi la tua preferenza e condividila sui Facebook.
+    		</p>
+	    	<ul class="list-unstyled">
+	        	@flows.map { flow =>
+		            <li>
+		            	@form(routes.Application.index(flow.id)) {
+			            	<input type="submit" class="btnlist btn btn-primary" value='@flow.description'>		
+			            	</input>
+		            	}
+		            </li>
+	        	}
+	    	</ul>
+    	</div>
+    </body>
+</html>

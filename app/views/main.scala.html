@@ -1,0 +1,196 @@
+@(title: String, id_flow: Long, id: Long)(content: Html)
+<!DOCTYPE html>
+
+<html>
+    <head>
+
+        <title>@title</title>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-theme.min.css")">
+
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+        <link rel="thumbsup" type="image/png" href="@routes.Assets.at("images/like_thumbs_up.png")">
+
+        <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/d3.min.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/eviz.js")" type="text/javascript"></script>
+        <script src="@routes.Assets.at("javascripts/bootstrap.min.js")" type="text/javascript"></script>
+        <script src="@controllers.routes.Application.javascriptRoutes" type="text/javascript"></script>
+        
+        <script>
+      		$( document ).ready(function() {
+            selectedFlow = @id_flow;
+
+            $("#boost").click( function() {
+              scrollPosition = $("#thechartcontainer").scrollLeft();
+              $("#thechart").fadeOut(500, function() {
+                updateEvent();
+                $("#thechart").fadeIn(500);
+              });
+            });
+
+            $("#next").click( function() {
+              $("#detailcontainer").fadeOut(500, function() {
+                $("#thechart").fadeOut(500, function() {
+                  next();
+                  $("#thechart").fadeIn(500);
+                });
+              });
+            });
+
+            $("#previous").click( function() {
+              $("#detailcontainer").fadeOut(500, function() {
+                $("#thechart").fadeOut(500, function() {
+                  previous();
+                  $("#thechart").fadeIn(500);
+                });
+              });
+            });
+
+            if(@id == -1) {
+                  
+        		 	getData(new Date().getMonth()+1, new Date().getFullYear(), null, @id_flow);
+            }
+            else {
+              console.log("Chiamata: "+@id_flow);
+              getData(new Date().getMonth()+1, new Date().getFullYear(), @id, @id_flow);
+            }
+
+            // Load the SDK asynchronously
+            (function(d){
+             var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+             if (d.getElementById(id)) {return;}
+             js = d.createElement('script'); js.id = id; js.async = true;
+             js.src = "//connect.facebook.net/en_US/all.js";
+             ref.parentNode.insertBefore(js, ref);
+            }(document));
+
+            
+
+	      	});
+ 	
+    	  	$( window ).load(function() {
+        	  	console.log( "window loaded" );
+      		});
+
+          window.fbAsyncInit = function() {
+              FB.init({
+                appId      : '228774530661743',
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                xfbml      : true  // parse XFBML
+              });
+
+              // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+              // for any authentication related change, such as login, logout or session refresh. This means that
+              // whenever someone who was previously logged out tries to log in again, the correct case below 
+              // will be handled. 
+              FB.Event.subscribe('auth.authResponseChange', function(response) {
+                // Here we specify what we do with the response anytime this event occurs. 
+                if (response.status === 'connected') {
+                  // The response object is returned with a status field that lets the app know the current
+                  // login status of the person. In this case, we're handling the situation where they 
+                  // have logged in to the app.
+                  testAPI();
+                } else if (response.status === 'not_authorized') {
+                  // In this case, the person is logged into Facebook, but not into the app, so we call
+                  // FB.login() to prompt them to do so. 
+                  // In real-life usage, you wouldn't want to immediately prompt someone to login 
+                  // like this, for two reasons:
+                  // (1) JavaScript created popup windows are blocked by most browsers unless they 
+                  // result from direct interaction from people using the app (such as a mouse click)
+                  // (2) it is a bad experience to be continually prompted to login upon page load.
+                  FB.login(function(){}, {scope: 'publish_actions'});
+                } else {
+                  // In this case, the person is not logged into Facebook, so we call the login() 
+                  // function to prompt them to do so. Note that at this stage there is no indication
+                  // of whether they are logged into the app. If they aren't then they'll see the Login
+                  // dialog right after they log in to Facebook. 
+                  // The same caveats as above apply to the FB.login() call here.
+                  FB.login(function(){}, {scope: 'publish_actions'});
+                }
+
+              });
+
+          };
+    	</script>
+
+    </head>
+
+    <body>
+    	<div class="container-fluid" id="maincontainer"/>
+        <div class="row" id="mynavbar">
+          <div class="col-md-1 col-xs-1 col-sm-1" id="home-container">
+            <a href="http://localhost:9000/" id="homelink">Home</a>
+          </div>
+        </div>
+	    	<div class="row" >
+	    		<div class="col-md-2 col-xs-2 col-sm-2" id="previous-container">
+	    			<button type="button" class="btn btn-primary" id="previous">Mese Precedente</button>
+	    		</div>
+          <div class="col-md-1 col-xs-1 col-sm-1" id="home-container">
+          </div>
+	    		<div class="col-md-6 col-xs-6 col-sm-6">
+	    			<h4 id="periodlabel"></h4>
+	    		</div>
+          <div class="col-md-1 col-xs-1 col-sm-1" id="home-container">
+          </div>
+	    		<div class="col-md-2 col-xs-2 col-sm-2" id="next-container">
+	    			<button type="button" class="btn btn-primary" id="next">Mese Successivo</button>
+	    		</div>
+	    	</div>
+	    	<div class="row">
+	        	<div id="thechartcontainer">
+	    			<svg class="chart" id="thechart"></svg>
+				</div>
+			</div>
+			<div class="row" id="detailcontainer">
+				<!--div class="col-md-4 col-xs-4 col-sm-4 panel panel-success" id="imagecontainer">
+					<div class="panel-heading">
+        				<h3 class="panel-title">Immagine</h3>
+      				</div>
+      				<div class="panel-body">
+        				Seleziona un evento 
+      				</div>
+				</div-->
+				<div class="col-md-4 col-xs-4 col-sm-4 panel panel-info" id="mapcontainer">
+					    <div class="panel-heading">
+        				<h3 class="panel-title">Mappa</h3>
+      				</div>
+      				<div class="panel-body" id="themap">
+        				Seleziona un evento 
+      				</div>
+				</div>
+        <div class="col-md-4 col-xs-4 col-sm-4 panel panel-info" id="imagecontainer">
+              <div class="panel-heading">
+                <h3 class="panel-title">Immagine</h3>
+              </div>
+              <div class="panel-body" id="theimage">
+                Seleziona un evento 
+              </div>
+        </div>
+				<div class="col-md-4 col-xs-4 col-sm-4 panel panel-info" id="descriptioncontainer">
+					<div class="panel-heading">
+        				<h3 class="panel-title">Descrizione</h3>
+      				</div>
+      				<div class="panel-body" id="theevent">
+        				Seleziona un evento 
+      				</div>
+				</div> 
+				<div class="col-md-12 col-xs-12 col-sm-12" id="boostcontainer">
+					<button type="button" class="btn btn-primary" id="boost">Mi interessa</button>
+				</div>
+			</div>
+      <div class = "row">
+        <div class="col-md-2 col-xs-2 col-sm-2" id="fblogincontainer">
+          <fb:login-button show-faces="true" width="200" max-rows="1" id = "fblogin"></fb:login-button>
+        </div>
+        <div class="col-md-2 col-xs-2 col-sm-2" id="fblogoutcontainer">
+          <fb:logout-button show-faces="true" width="200" max-rows="1" id = "fblogout"></fb:logout-button>
+        </div>
+      </div>
+		</div>
+    </body>
+</html>
