@@ -110,9 +110,11 @@ function updateEvent() {
     FB.api('/me', function(response) {
             console.log('Stai per esprimere la tua preferenza: ' + response.name + '.' +response.id+ " per l'evento "+selectedId+ " del flusso "+selectedFlow);
 
-            if(response.id=="undefined") {
+            if(response.id == null) {
 
-                alert("Devi loggarti con l'utente Facebook per esprimere il tuo interesse");
+                FB.login(function(){}, {scope: 'publish_actions'});
+
+                //alert("Devi loggarti con l'utente Facebook per esprimere il tuo interesse");
 
                 getData(currentmonth,currentyear,null, selectedFlow);
 
