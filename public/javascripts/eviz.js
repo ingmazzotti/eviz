@@ -135,7 +135,7 @@ function updateEvent() {
                                 picture: selectedImage,
                                 name: selectedSummary,
                                 caption: selectedSummary,
-                                link: 'http://www.ingmazzotti.it/event/'+selectedFlow+'/'+selectedId+'/',
+                                link: 'http://www.ingmazzotti.it:9000/event/'+selectedFlow+'/'+selectedId+'/',
                                 
                             });
                         
