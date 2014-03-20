@@ -49,6 +49,36 @@
               });
             });
 
+            /*
+            $("#loginbutton").click( function() {
+              if($("#loginbutton").html()=='Login') {
+                $("#modalFacebook").modal("show");  
+              }
+              else {
+                FB.logout();
+                $("#loginbutton").html("Login");
+              }
+              
+            });
+
+            $("#form").submit(function(e){
+
+                $.ajax({
+
+                    url: "dateRecd.php",
+                    type: "POST",
+                    data: $(this).serialize(),
+
+                    success: function(data){
+                        alert(data);
+                    //  chatWith('9','name');
+                    }
+
+
+                });
+
+            });
+            */
             if(@id == -1) {
                   
         		 	getData(new Date().getMonth()+1, new Date().getFullYear(), null, @id_flow);
@@ -99,6 +129,7 @@
                   // The response object is returned with a status field that lets the app know the current
                   // login status of the person. In this case, we're handling the situation where they 
                   // have logged in to the app.
+                  //$("#loginbutton").html("Logout");
                   testAPI();
                 } else if (response.status === 'not_authorized') {
                   // In this case, the person is logged into Facebook, but not into the app, so we call
@@ -189,12 +220,15 @@
 					<button type="button" class="btn btn-primary" id="boost">Mi interessa</button>
 				</div>
 			</div>
-      <div class = "row">
-        <div class="col-md-2 col-xs-2 col-sm-2" id="fblogincontainer">
-          <fb:login-button show-faces="true" width="200" max-rows="1" id = "fblogin" scope="publish_actions,publish_stream"></fb:login-button>
+
+      <!--div class = "row">
+        <div class="col-md-2 col-xs-2 col-sm-12" id="loginlogoutcontainer">
+          <button type="button" class="btn btn-primary" id="loginbutton">Login</button>
         </div>
-        <div class="col-md-2 col-xs-2 col-sm-2" id="fblogoutcontainer">
-          <fb:logout-button show-faces="true" width="200" max-rows="1" id = "fblogout"></fb:logout-button>
+      </div-->
+      <div class = "row">
+        <div class="col-md-4 col-xs-4 col-sm-4" id="fblogincontainer">
+          <fb:login-button show-faces="true" width="200" max-rows="1" id = "fblogin" autologoutlink="true" scope="publish_actions,publish_stream"></fb:login-button>
         </div>
       </div>
 		</div>
@@ -214,5 +248,33 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <!--div class="modal fade" id="modalFacebook">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Login con facebook</h4>
+          </div>
+          <div class="modal-body">
+            <form action="" method="POST" id="formLogin">                    
+                    <table width="100%">
+                        <tr>                        
+                            <td>Utente: </td> <td><input type="text" name="username" placeholder="Nome"></td>
+                        </tr>
+                        <th>&nbsp;</th>
+                        <tr>                        
+                            <td>Password: </td> <td><input type="password" name="password" placeholder="Password"></td>
+                        </tr>
+                    </table>
+                </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Annulla</button>
+            <button class="btn btn-primary" data-dismiss="modal" id="submitLogin">Login</button>
+          </div>
+        </div>
+      </div>
+    </div-->
     </body>
 </html>
