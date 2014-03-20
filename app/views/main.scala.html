@@ -22,6 +22,7 @@
         <script>
       		$( document ).ready(function() {
             selectedFlow = @id_flow;
+            setFlowDescription();
 
             $("#boost").click( function() {
               scrollPosition = $("#thechartcontainer").scrollLeft();
@@ -99,7 +100,6 @@
 
             $( window ).resize(function() {
               if($( "#mapcontainer" ).is(":visible") ) {
-                console.log("VISIBLE!");
                 $("#iframemap").width(($("#mapcontainer").width()-40));
                 $("#iframemap").height(($("#mapcontainer").width()-40));
               }
@@ -108,6 +108,7 @@
 	      	});
  	
     	  	$( window ).load(function() {
+
         	  	console.log( "window loaded" );
       		});
 
@@ -161,6 +162,12 @@
         <div class="row" id="mynavbar">
           <div class="col-md-1 col-xs-1 col-sm-1" id="home-container">
             <a href="http://www.ingmazzotti.it:9000/" id="homelink">Home</a>
+          </div>
+          <div class="col-md-10 col-xs-10 col-sm-10" id="flowdescriptioncontainer">
+            <h4 id="flowdescription"></h4>
+          </div>
+          <div class="col-md-1 col-xs-1 col-sm-1" id="home-container">
+            
           </div>
         </div>
 	    	<div class="row" >

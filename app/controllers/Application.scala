@@ -13,7 +13,8 @@ object Application extends Controller {
 	  Ok(
 	    Routes.javascriptRouter("appRoutes")(
 	    	routes.javascript.Application.getAll,
-	    	routes.javascript.Application.updateEvent
+	    	routes.javascript.Application.updateEvent,
+        routes.javascript.Application.getFlowDescription
 	    )
 	  ).as("text/javascript")
 }
@@ -42,5 +43,9 @@ object Application extends Controller {
 
   def getFlows() = Action {
   	Ok(views.html.flows("Eviz", Flow.getFlows()))
+  }
+
+  def getFlowDescription(id_flow: Long) = Action {
+    Ok(Flow.getFlowDescription(id_flow))
   }
 }

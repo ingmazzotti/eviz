@@ -70,6 +70,17 @@ function checkImage (src, good, bad) {
     img.src = src;
 }
 
+function setFlowDescription() {
+    appRoutes.controllers.Application.getFlowDescription(selectedFlow).ajax( {
+                    success: function(data) {
+                        console.log("Setting Flow description: "+data);
+                        $("#flowdescription").html("Eventi "+data);
+                    },
+                    error: function(data) {
+                    }
+    });
+}
+
 // Here we run a very simple test of the Graph API after login is successful. 
             // This testAPI() function is only called in those cases. 
             function testAPI() {
@@ -185,7 +196,7 @@ function getData(month, year, id, id_flow) {
                 dataorig[index] = [event.fromdate, event.todate, event.summary, event.clicks, event.id, event.id_flow, event.longitude, event.latitude,
                                    event.licenza, event.link, event.image, event.description, event.category];
             })
-            
+            setFlowDescription();
             render(month, year, day);
         }
 
@@ -212,19 +223,19 @@ function render(month, year, dayevent) {
         day = new Date(currentyear,currentmonth-1,1);
         lastday = new Date(currentmonth==12?currentyear+1:currentyear, currentmonth==12?0:currentmonth,0);
 
-        console.log("Lastday "+lastday);
+        //console.log("Lastday "+lastday);
 
         minimumdate = currentyear*10000+currentmonth*100+1;
         maximumdate = currentyear*10000+currentmonth*100+lastday.getDate();
 
-        console.log("Minimumdate = "+minimumdate+", Maximumdate = "+maximumdate);
+        //console.log("Minimumdate = "+minimumdate+", Maximumdate = "+maximumdate);
 
         var yy=0;
         var numslot = 0;
         var data = [];
         var ii=0;
         for(var jj = 0; jj < dataorig.length;jj++) {
-            console.log("Confronto: "+dataorig[jj][0]);
+            //console.log("Confronto: "+dataorig[jj][0]);
             if((dataorig[jj][0]>=minimumdate && dataorig[jj][0]<=maximumdate)  || 
                (dataorig[jj][0]<minimumdate && dataorig[jj][1]>=minimumdate)) {
                 data[ii] = dataorig[jj];
@@ -235,15 +246,15 @@ function render(month, year, dayevent) {
 
         var stopj=false;
         for(var j = 0; j < data.length;j++) {
-            console.log("Confronto: "+data[j][0]);
+            //console.log("Confronto: "+data[j][0]);
             if((data[j][0]>=minimumdate && data[j][0]<=maximumdate) || 
                (data[j][0]<minimumdate && data[j][1]>=minimumdate)) {
 
-                console.log("Devo posizionare "+j);
+                //console.log("Devo posizionare "+j);
                 if(j==0) {
                     data[j].push(0);
                     numslot++;
-                    console.log("Posizione "+0);
+                    //console.log("Posizione "+0);
                 } else {
                     freeslot=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
                               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -253,10 +264,10 @@ function render(month, year, dayevent) {
                     var stopk=false;
                     for(var k=0; k<data.length && !stopk;k++) {
                         if(data[k].length == 14) { //9
-                            console.log("ispeziono: "+k);
+                            //console.log("ispeziono: "+k);
                              curslot = data[k][13]; //8   
                             if(data[j][0] >= data[k][0] && data[j][0] <= data[k][1]) {
-                                console.log("Intersezione "+curslot);
+                                //console.log("Intersezione "+curslot);
                                     freeslot[curslot] = 1;
                             }
                         }
@@ -267,11 +278,11 @@ function render(month, year, dayevent) {
                     
                     var stopw = false;
                     
-                    console.log("Freeslot "+freeslot.join());
+                    //console.log("Freeslot "+freeslot.join());
                     
                     for(var w = 0; w<freeslot.length && !stopw; w++) {
                         if(freeslot[w]==0) {
-                            console.log("Posizione "+w);
+                            //console.log("Posizione "+w);
                             numslot = numslot>w+1?numslot:w+1;
                             data[j].push(w);
                             stopw = true;
@@ -289,7 +300,7 @@ function render(month, year, dayevent) {
         labels = 40;
         upperbase = 16;
 
-        console.log("Numslot "+numslot);
+        //console.log("Numslot "+numslot);
 
         //barwidth = height/numslot;
 
@@ -322,7 +333,7 @@ function render(month, year, dayevent) {
                           var xx=x(d[0]);
                           var yy=upperbase+d[13]*barwidth; //8
                           //console.log("Slot: "+d[4]+", Width: "+barwidth);
-                          console.log(i+"translate("+xx+","+yy+")");
+                          //console.log(i+"translate("+xx+","+yy+")");
                           return "translate("+xx+","+yy+")"; 
                   });
 
@@ -388,7 +399,7 @@ function render(month, year, dayevent) {
 
                 d3.select(this).transition().style("fill","green").duration(500);
 
-                console.log("Incremento evento con id "+d[4]);
+                //console.log("Incremento evento con id "+d[4]);
                 
                 selectedId = d[4];
                 selectedFlow = d[5];
@@ -397,7 +408,7 @@ function render(month, year, dayevent) {
 
                 $("#theevent").html(d[11]);
                 //$("#themap").html("Long: "+d[6]+", Lat: "+d[7]);
-                console.log("Mapcontainer width: "+$("#mapcontainer").width());
+                //console.log("Mapcontainer width: "+$("#mapcontainer").width());
                 
                 $("#themap").html(
                     "<iframe  id=\"iframemap\" width=\""+($("#mapcontainer").width()-40)+"\" height=\""+($("#mapcontainer").width()-40)+"\" frameborder=\"0\" scrolling=\"no\""+
@@ -473,7 +484,7 @@ function render(month, year, dayevent) {
                     mul--;
                     caratteri = d[2].length*mul;
                 }
-                console.log("Larghezza: "+larghezza+" Caratteri: "+caratteri+" Grandezza base: "+grandezzabase);
+                //console.log("Larghezza: "+larghezza+" Caratteri: "+caratteri+" Grandezza base: "+grandezzabase);
                 return grandezzabase+"px";
             })
             .text(function(d) { return d[2]; })
@@ -552,7 +563,7 @@ function render(month, year, dayevent) {
             .attr("text-anchor","end")
             .text(function(d) { return ""+d[3]; });
 
-        console.log("Image url: "+$("link[rel='thumbsup']").attr("href"));
+        //console.log("Image url: "+$("link[rel='thumbsup']").attr("href"));
 
         bar.append("svg:image")
             .attr("x",function(d) {
@@ -607,7 +618,6 @@ function render(month, year, dayevent) {
                     );
 
                 scrollPosition = $("#thechartcontainer").scrollLeft();
-                console.log("Scrollposition is "+scrollPosition);
                 $("#detailcontainer").fadeIn(1000);
 
 

@@ -79,6 +79,11 @@
 	text-align: left;
 }
 
+#flowdescriptioncontainer {
+	color: white;
+	text-align: center;
+} 
+
 #mapcontainer {
 	text-align:center;
 }
