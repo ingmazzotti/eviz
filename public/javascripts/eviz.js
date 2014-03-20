@@ -58,6 +58,11 @@ var selectedSummary = "";
 var scrollPosition = -1;
 var selectedImage = "";
 
+function myAlert(message) {
+    $("#errormessage").html(message);
+    $('#myModal').modal('show');
+}
+
 function checkImage (src, good, bad) {
     var img = new Image();
     img.onload = good; 
@@ -147,8 +152,8 @@ function updateEvent() {
                     },
 
                     error: function(data) {
-                        
-                        alert("Hai già espresso la preferenza per questo evento!");
+                        myAlert("Hai già espresso la preferenza per questo evento.")
+                        //alert("Hai già espresso la preferenza per questo evento!");
                         
                         getData(currentmonth,currentyear, null, selectedFlow);
                     }
@@ -192,7 +197,7 @@ function getData(month, year, id, id_flow) {
 function render(month, year, dayevent) {
     
     if(dataorig == null || dataorig.length == 0) {
-        alert("Nessun Evento");
+        myAlert("Nessun Evento");
     } 
 
     else {
@@ -339,7 +344,7 @@ function render(month, year, dayevent) {
                     //$("#themap").html("Long: "+d[6]+", Lat: "+d[7]);
                 
                     $("#themap").html(
-                        "<iframe width=\"350\" height=\"350\" frameborder=\"0\" scrolling=\"no\""+
+                        "<iframe id=\"iframemap\" width=\""+($("#mapcontainer").width()-40)+"\" height=\""+($("#mapcontainer").width()-40)+"\" frameborder=\"0\" scrolling=\"no\""+
                         " marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox="+
                         (d[7]-0.005)+"%2C"+(d[6]-0.005)+"%2C"+(d[7]+0.005)+"%2C"+(d[6]+0.005)+"&amp;layer=mapnik&amp;marker="+d[6]+"%2C"+d[7]+
                         " style=\"border: 1px solid black\"></iframe><br/><small><a href=\"http://www.openstreetmap.org/?mlat="
@@ -392,9 +397,10 @@ function render(month, year, dayevent) {
 
                 $("#theevent").html(d[11]);
                 //$("#themap").html("Long: "+d[6]+", Lat: "+d[7]);
+                console.log("Mapcontainer width: "+$("#mapcontainer").width());
                 
                 $("#themap").html(
-                    "<iframe width=\"350\" height=\"350\" frameborder=\"0\" scrolling=\"no\""+
+                    "<iframe  id=\"iframemap\" width=\""+($("#mapcontainer").width()-40)+"\" height=\""+($("#mapcontainer").width()-40)+"\" frameborder=\"0\" scrolling=\"no\""+
                     " marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox="+
                     (d[7]-0.005)+"%2C"+(d[6]-0.005)+"%2C"+(d[7]+0.005)+"%2C"+(d[6]+0.005)+"&amp;layer=mapnik&amp;marker="+d[6]+"%2C"+d[7]+
                     " style=\"border: 1px solid black\"></iframe><br/><small><a href=\"http://www.openstreetmap.org/?mlat="
@@ -452,6 +458,7 @@ function render(month, year, dayevent) {
                     return 10;
                 }
             })
+            .style("pointer-events","none")
             .attr("y",barwidth/2)
             .attr("fill","black")
             .attr("dominant-baseline","central")
@@ -476,23 +483,70 @@ function render(month, year, dayevent) {
             .on("mouseout", function(d) {
                 d3.select("body").style("cursor", "default");
             });
+            /*
+            .on("click",function(d) {
+
+
+                $(".checked").each(function(index, element) {
+                    //d3.select(element).transition().attr("fill","steelblue").duration(500);
+                    d3.select(element).transition().style("fill", "steelblue").duration(500);
+                    d3.select(element).attr("class", "");
+                });
+
+                d3.select(this).attr("class", "checked");
+
+                d3.select(this).transition().style("fill","green").duration(500);
+
+                console.log("Incremento evento con id "+d[4]);
+                
+                selectedId = d[4];
+                selectedFlow = d[5];
+                selectedSummary = d[2];
+                selectedImage = d[10];
+
+                $("#theevent").html(d[11]);
+                //$("#themap").html("Long: "+d[6]+", Lat: "+d[7]);
+                
+                $("#themap").html(
+                    "<iframe width=\"350\" height=\"350\" frameborder=\"0\" scrolling=\"no\""+
+                    " marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox="+
+                    (d[7]-0.005)+"%2C"+(d[6]-0.005)+"%2C"+(d[7]+0.005)+"%2C"+(d[6]+0.005)+"&amp;layer=mapnik&amp;marker="+d[6]+"%2C"+d[7]+
+                    " style=\"border: 1px solid black\"></iframe><br/><small><a href=\"http://www.openstreetmap.org/?mlat="
+                    +d[6]+"0&amp;mlon="+d[7]+"#map=13/"+d[6]+"/"+d[7]+"\">Visualizza mappa ingrandita</a></small>");
+                
+                    checkImage(
+                        d[10],
+                        function() { 
+                        // Do something now you know the image exists.
+                            $("#theimage").html("<a href=\""+d[9]+"\" target=\"_blank\"><img src=\""+d[10]+"\" alt=\""+d[2]+"\"></a>");
+                        },
+                        function() { 
+                        // Image doesn't exist - do something else.
+                            $("#theimage").html("<a href=\""+d[9]+"\" target=\"_blank\">"+d[2]+"</a>");
+                        }
+                    );
+
+                    $("#detailcontainer").fadeIn(1000);
+            
+            });*/
 
 
         bar.append("text")
             .attr("x",function(d) {
                 if ( x(d[1]) > width ) {
-                    return (width-x(d[0]))-10;
+                    return (width-x(d[0]))-15;
                 } else
                 if(x(d[0]) < 0) {
-                    return -x(d[0])+x(d[1]+1)-10;
+                    return -x(d[0])+x(d[1]+1)-15;
                 } 
                 else {
-                    return (x(d[1]+1)-x(d[0]))-10;
+                    return (x(d[1]+1)-x(d[0]))-15;
                 }
             })
             .attr("y",barwidth/4+4) //barwidth/2
+            .attr("dy","0.35em")
             .attr("fill","#C00808")
-            .attr("dominant-baseline","central")
+            //.attr("dominant-baseline","central")
             .attr("font-family","impact, sans-serif")
             .attr("font-size","16px")
             .attr("text-anchor","end")
@@ -534,7 +588,7 @@ function render(month, year, dayevent) {
                 //$("#themap").html("Long: "+d[6]+", Lat: "+d[7]);
                 
                 $("#themap").html(
-                    "<iframe width=\"350\" height=\"350\" frameborder=\"0\" scrolling=\"no\""+
+                    "<iframe id=\"iframemap\" width=\""+($("#mapcontainer").width()-40)+"\" height=\""+($("#mapcontainer").width()-40)+"\" frameborder=\"0\" scrolling=\"no\""+
                     " marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox="+
                     (d[7]-0.005)+"%2C"+(d[6]-0.005)+"%2C"+(d[7]+0.005)+"%2C"+(d[6]+0.005)+"&amp;layer=mapnik&amp;marker="+d[6]+"%2C"+d[7]+
                     " style=\"border: 1px solid black\"></iframe><br/><small><a href=\"http://www.openstreetmap.org/?mlat="
