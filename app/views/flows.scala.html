@@ -23,25 +23,35 @@
     </head>
 
     <body>
-    	<div class="sc-docs-header" id="content">
-	    	<div class="container">
-	      		<h1>Eviz</h1>
-	    	</div>
-  		</div>
-    	<div id="listaeventi">
-    		<p>
-    			Eviz è uno strumento di visualizzazione eventi. Trova quelli più interessanti, esprimi la tua preferenza e condividila sui Facebook.
-    		</p>
-	    	<ul class="list-unstyled">
-	        	@flows.map { flow =>
-		            <li>
-		            	@form(routes.Application.index(flow.id)) {
-			            	<input type="submit" class="btnlist btn btn-primary" value='@flow.description'>		
-			            	</input>
-		            	}
-		            </li>
-	        	}
-	    	</ul>
-    	</div>
+        <div id="wrap">
+        	<div class="sc-docs-header" id="content">
+    	    	<div class="container">
+    	      		<h1>Eviz</h1>
+    	    	</div>
+      		</div>
+        	<div id="listaeventi">
+        		<p class="subtitle">
+        			Eviz è uno strumento di visualizzazione eventi. Trova quelli più interessanti, esprimi la tua preferenza e condividila su Facebook.
+        		</p>
+    	    	<ul class="list-unstyled">
+    	        	@flows.map { flow =>
+    		            <li>
+    		            	@form(routes.Application.index(flow.id)) {
+    			            	<input type="submit" class="btnlist btn btn-primary" value='@flow.description'>		
+    			            	</input>
+    		            	}
+    		            </li>
+    	        	}
+    	    	</ul>
+        	</div>
+            <div id="push"></div>
+        </div>
+        <div id="footer">
+                <div class="container" id="footercontainer">
+                    <p class="footercontent">Progetto di Marcello Mazzotti <a href="http://www.ingmazzotti.it">www.ingmazzotti.it</a>
+                    </p>
+                </div>
+        </div>
+        
     </body>
 </html>
